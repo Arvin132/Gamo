@@ -18,13 +18,18 @@ class Match4Command():
  
 class Match4Game:
     _state: Match4State
+    tie_value = 3
 
     def __init__(self) -> None:
-        self._state = Match4State
+       self.setup()  
+
+    def setup(self) -> None:
+        self._state = Match4State()
         self._state.board = np.zeros((8, 8))
         self._state.terminal = False
         self._state.current_player = 1
         self._state.winner_player = -10 # dummy values
+
 
     def get_state(self) -> Match4State:
         return deepcopy(self._state)
@@ -60,6 +65,15 @@ class Match4Game:
                             state.winner_player = winner
                             state.terminal = True
                             return winner
+                        
+        # if no winner check for a tie:
+        for i in range(8):
+            if (state.board[i][0] == 0):
+                break
+            if (i == 7):
+                state.terminal = True
+                state.winner_player = self.tie_value
+                return self.tie_value
         return 0
     
     def legal_move(self, command: Match4Command) -> bool:

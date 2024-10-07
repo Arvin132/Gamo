@@ -16,5 +16,4 @@ class MiniMaxAgent(Match4Agent):
         S = game.get_state()
         
 
-    def minimax(self, state: Match4State, depth: int) ->:
 
