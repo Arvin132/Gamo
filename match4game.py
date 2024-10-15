@@ -68,7 +68,7 @@ class Match4Game:
                         
         # if no winner check for a tie:
         for i in range(8):
-            if (state.board[i][0] == 0):
+            if (state.board[0][i] == 0):
                 break
             if (i == 7):
                 state.terminal = True

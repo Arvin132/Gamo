@@ -13,7 +13,7 @@ from copy import deepcopy
 
     Gamerunner_Match4: class designed to run match 4 game given 2 different Agents
 
-    ctor: Gamerunner_Match4(Match4Agent p1, Match4Agent)
+    ctor: Gamerunner_Match4(Match4Agent p1, Match4Agent p2)
 
     - use Gamerunner_Match4.run() to start a new game
     
@@ -50,9 +50,9 @@ class Gamerunner_Match4:
             command = self.cur_player.take_turn(self.game)
             
             # checks if the given command is a correct command
-            if (command is not Match4Command):
+            if (not isinstance(command, Match4Command)):
                 raise TypeError("Gamerunner_Match4 said: Expected a Match4Command from given Match4Agent")
-            if (command.player_id != self.cur_player):
+            if (command.player_id != self.cur_player.player_id):
                 raise ValueError(f"Gamerunner_Match4 said: Expected a Match4Command for current player {self.cur_player}, got command for player {command.player_id}")
             if (not self.game.legal_move(command)):
                 raise ValueError("Gamerunner_Match4 said: Expected a legal Match4Command, got an illegal one !!")
