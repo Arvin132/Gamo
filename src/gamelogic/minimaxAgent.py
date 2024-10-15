@@ -14,6 +14,18 @@ class MiniMaxAgent(Match4Agent):
 
     def take_turn(self, game: Match4Game) -> Match4Command:
         S = game.get_state()
+
+    def apply_minimax(self, game: Match4Game, S: Match4State, k=0):
         
 
 
+
+"""
+
+    some simple heuristic functions
+
+"""
+
+
+def count_4_heurisitic(S: Match4State) -> int:
+	S
