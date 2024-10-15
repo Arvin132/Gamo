@@ -10,7 +10,7 @@ class Match4State:
     current_player: int
     winner_player: int
 
-    def __eq__(self, other: Match4State):
+    def __eq__(self, other):
         return self.board == other.board and self.terminal == other.terminal and self.current_player == other.current_player \
                 and self.winner_player == other.winner_player
 
@@ -42,12 +42,24 @@ class Match4Game:
         return deepcopy(self._state)
     
     def apply_command(self, command: Match4Command) -> bool:
+
+        
+        # checks if the given command is a correct command
+        if (not isinstance(command, Match4Command)):
+            raise TypeError("Gamerunner_Match4 said: Expected a Match4Command from given Match4Agent")
+        if (command.player_id != self._state.player_id):
+            raise ValueError(f"Gamerunner_Match4 said: Expected a Match4Command for current player {self._state.current_player}, got command for player {command.player_id}")
+        if (not self.legal_move(command)):
+            raise ValueError("Gamerunner_Match4 said: Expected a legal Match4Command, got an illegal one !!")
+        
+
         row = self._state.board.shape[0] - 1
         while(self._state.board[row][command.column] != 0):
             row -= 1
             if (row < 0):
                 return False
         self._state.board[row][command.column] = command.player_id
+        self._state.current_player = 1 if self._state.current_player == 2 else 2
         self.check_for_terminal()
         return True
     

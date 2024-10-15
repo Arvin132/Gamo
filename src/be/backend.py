@@ -1,19 +1,16 @@
 from flask import Flask, jsonify, session, request
 from flask_cors import CORS
-from gamelogic import Gamerunner_Match4
 import numpy as np
 
 app = Flask(__name__)
 CORS(app)
 app.secret_key = 'supersecretkey'
 
-game_runner = Gamerunner_Match4()
 
 # Define a route for the root URL
 @app.route('/start-connect4')
 def start_connect_4():
-    game_runner.run()
-
+    return "Hale"
 
 @app.route('/')
 def home():
