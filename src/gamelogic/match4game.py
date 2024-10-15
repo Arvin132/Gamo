@@ -10,22 +10,29 @@ class Match4State:
     current_player: int
     winner_player: int
 
+    def __eq__(self, other: Match4State):
+        return self.board == other.board and self.terminal == other.terminal and self.current_player == other.current_player \
+            self.winner_player == other.winner_player
+
 
 
 class Match4Command():
     column: int
     player_id: int
  
+
 class Match4Game:
     _state: Match4State
     tie_value = 3
+    num_cols = 8
+    num_rows = 8
 
     def __init__(self) -> None:
        self.setup()  
 
     def setup(self) -> None:
         self._state = Match4State()
-        self._state.board = np.zeros((8, 8))
+        self._state.board = np.zeros((self.num_rows, self.num_cols))
         self._state.terminal = False
         self._state.current_player = 1
         self._state.winner_player = -10 # dummy values
@@ -48,8 +55,8 @@ class Match4Game:
         return self.check_for_terminal_for_state(self._state)
     
     def check_for_terminal_for_state(self, state: Match4State) -> int:
-        for i in range(8):
-            for j in range(8):
+        for i in range(self.num_cols):
+            for j in range(self.num_rows):
                 cur_pos = np.array([i, j])
                 winner = state.board[i][j]
                 if (winner == 0): continue
@@ -67,7 +74,7 @@ class Match4Game:
                             return winner
                         
         # if no winner check for a tie:
-        for i in range(8):
+        for i in range(num_cols):
             if (state.board[0][i] == 0):
                 break
             if (i == 7):
@@ -80,7 +87,6 @@ class Match4Game:
         try:
             if(self._state.board[0][command.column] != 0):
                 return False
-            
             return True
         except:
             return False
