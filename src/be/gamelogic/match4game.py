@@ -12,7 +12,7 @@ class Match4State:
 
     def __eq__(self, other: Match4State):
         return self.board == other.board and self.terminal == other.terminal and self.current_player == other.current_player \
-            self.winner_player == other.winner_player
+                and self.winner_player == other.winner_player
 
 
 
@@ -74,7 +74,7 @@ class Match4Game:
                             return winner
                         
         # if no winner check for a tie:
-        for i in range(num_cols):
+        for i in range(self.num_cols):
             if (state.board[0][i] == 0):
                 break
             if (i == 7):
