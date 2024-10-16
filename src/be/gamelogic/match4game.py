@@ -47,7 +47,7 @@ class Match4Game:
         # checks if the given command is a correct command
         if (not isinstance(command, Match4Command)):
             raise TypeError("Gamerunner_Match4 said: Expected a Match4Command from given Match4Agent")
-        if (command.player_id != self._state.player_id):
+        if (command.player_id != self._state.current_player):
             raise ValueError(f"Gamerunner_Match4 said: Expected a Match4Command for current player {self._state.current_player}, got command for player {command.player_id}")
         if (not self.legal_move(command)):
             raise ValueError("Gamerunner_Match4 said: Expected a legal Match4Command, got an illegal one !!")

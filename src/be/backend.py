@@ -50,7 +50,7 @@ def start_game_connect4():
 @app.route("/get-state-connect4", methods=["GET"])
 def get_state_connect4():
     try:
-        state, move = game.see_state()
+        state, move = game.get_state()
     except Exception as e:
         return jsonify({"message": "400 " + str(e)})
     else:
