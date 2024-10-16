@@ -1,6 +1,6 @@
 from copy import deepcopy
 import numpy as np
-
+import json
 
 
 
@@ -19,6 +19,10 @@ class Match4State:
 class Match4Command():
     column: int
     player_id: int
+    
+    def to_dict(self):
+        return {"column": self.column,
+                "player_id" : self.player_id}
  
 
 class Match4Game:
@@ -116,3 +120,20 @@ class Match4Game:
     
     def is_terminal(self) -> bool:
         return self._state.terminal
+    
+    def to_dict(self) -> dict:
+        return {
+            "board": self._state.board.tolist(), 
+            "terminal": self._state.terminal,
+            "current_player": self._state.current_player,
+            "winner_player": self._state.winner_player
+        }
+    def to_json(self) -> str:
+        return json.dumps(self.to_dict())
+
+    def from_json(self, json_str: str):
+        state_dict = json.loads(json_str)
+        self._state.board = np.array(state_dict['board'])  # Convert list back to NumPy array
+        self._state.terminal = state_dict['terminal']
+        self._state.current_player = state_dict['current_player']
+        self._state.winner_player = state_dict['winner_player']
