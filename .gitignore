@@ -3,3 +3,6 @@
 __pycache__/*
 my_env
 my_env/*
+*.py[cod]
+__pycache__/
+./src/fe/.env

@@ -1,6 +1,14 @@
+/* App.css */
 .App {
-  text-align: center;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #14142b; /* Change this to your desired color */
 }
+
 
 .App-logo {
   height: 40vmin;
