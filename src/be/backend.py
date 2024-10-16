@@ -7,7 +7,7 @@ import json
 
 app = Flask(__name__)
 CORS(app)
-global game_runner
+
 game_runner: AsyncGamerunner_Match4 = None
 app.secret_key = 'supersecretkey'
         
@@ -28,7 +28,6 @@ def start_game_connect4():
         player_2_type = data.get("player-2")
         p1 = AgentsList.all_agents[player_1_type]()
         p2 = AgentsList.all_agents[player_2_type]()
-        global game_runner
         game_runner = AsyncGamerunner_Match4(p1, p2)
         game_runner.start()
         
