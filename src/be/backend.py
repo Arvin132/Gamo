@@ -23,8 +23,9 @@ def apply_move():
     data = request.get_json()
     column = data.get('column')
     player_id = data.get('player-id')
+    is_bot = data.get("is-bot")
     try:
-        game.apply_move(column, player_id)
+        game.apply_move(column, player_id, is_bot)
     except Exception as e:
         return jsonify({"message": "400 " + str(e)})
     else:
