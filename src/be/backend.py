@@ -20,8 +20,9 @@ def get_agents_list():
 
 @app.route('/apply-move', methods=['POST'])
 def apply_move():
-    column = request.args.get('column')
-    player_id = request.args.get('player-id')
+    data = request.get_json()
+    column = data.get('column')
+    player_id = data.get('player-id')
     try:
         game.apply_move(column, player_id)
     except Exception as e:
