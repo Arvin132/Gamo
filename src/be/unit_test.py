@@ -50,8 +50,8 @@ class GamoFlaskTest_Backend(unittest.TestCase):
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data_dict["message"].startswith("200"))
         self.assertIsInstance(data_dict["state"]['board'], list)
-        self.assertIsNotNone(data_dict.get("move"))
-        self.assertIsNotNone(data_dict["move"].get("column"))
+        self.assertIsNotNone(data_dict.get("moves"))
+        self.assertIsInstance(data_dict["moves"], list)
         
         
     def test_apply_move_connect(self):
@@ -64,7 +64,6 @@ class GamoFlaskTest_Backend(unittest.TestCase):
         
         response = self.app.get('/get-state-connect4')
         data_dict = json.loads(response.data.decode('utf-8'))
-        print(data_dict)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data_dict["message"].startswith("200"))
         self.assertEqual(data_dict["state"]["board"][-1][0], 1.0)
@@ -78,7 +77,6 @@ class GamoFlaskTest_Backend(unittest.TestCase):
         
         response = self.app.get('/get-state-connect4')
         data_dict = json.loads(response.data.decode('utf-8'))
-        print(data_dict)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data_dict["message"].startswith("200"))
 

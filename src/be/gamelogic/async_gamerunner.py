@@ -18,7 +18,6 @@ class AsyncGamerunner_Match4:
         self.p2.player_id = 2
         self.cur_player = p1
         self.command_histo = []
-        self.latest_move_read = 0
 
     """
         start a fresh new game and start the playing process
@@ -37,13 +36,22 @@ class AsyncGamerunner_Match4:
         self.command_histo.append(deepcopy(command))
         self.cur_player = self.p2 if (self.cur_player is self.p1) else self.p1 
         
-    def get_state(self) -> tuple[Match4State, Match4Command]:
-        if (len(self.command_histo) != 0):
-            return self.game.get_state(), self.command_histo[-1]
-        else:
-            command = Match4Command()
-            command.column = -10; command.player_id= -10
-            return self.game.get_state(), command
+    # def get_state(self) -> tuple[Match4State, Match4Command]:
+    #     if (len(self.command_histo) != 0):
+    #         return self.game.get_state(), self.command_histo[-1]
+    #     else:
+    #         command = Match4Command()
+    #         command.column = -10; command.player_id= -10
+    #         return self.game.get_state(), command
         
+    def to_dict(self):
+        return {
+            "state" : self.game.to_dict(),
+            "moves": [move.to_dict() for move in self.command_histo] 
+        }
+    def from_dict(self, given: dict):
+        self.game = Match4Game.from_dict(given["state"])
+        self.command_histo = [Match4Command.from_dict(move) for move in given["moves"]]
+        pass
     
     
