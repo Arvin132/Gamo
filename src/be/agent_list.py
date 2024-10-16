@@ -8,4 +8,4 @@ class AgentsList:
     }
     
     def keys_tolist():
-        return list(AgentsList.all_agents.keys)
+        return list(AgentsList.all_agents.keys())

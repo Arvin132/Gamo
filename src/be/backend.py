@@ -1,4 +1,4 @@
-from flask import Flask, jsonify, session, request
+from flask import Flask, jsonify, request
 from flask_cors import CORS
 from gamelogic import AsyncGamerunner_Match4
 from agent_list import AgentsList
