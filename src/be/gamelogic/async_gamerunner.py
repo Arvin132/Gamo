@@ -50,7 +50,8 @@ class AsyncGamerunner_Match4:
             "moves": [move.to_dict() for move in self.command_histo] 
         }
     def from_dict(self, given: dict):
-        
+        self.game = Match4Game.from_dict(given["state"])
+        self.command_histo = [Match4Command.from_dict(move) for move in given["moves"]]
         pass
     
     

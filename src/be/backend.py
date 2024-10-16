@@ -10,14 +10,6 @@ CORS(app)
 global game_runner
 game_runner: AsyncGamerunner_Match4 = None
 app.secret_key = 'supersecretkey'
-
-
-def init_session():
-    if 'connect4_games' not in session:
-        session['connect4_games'] = {}
-    if 'connect4_next_game_id' not in session:
-        session['connect4_next_game_id'] = 1 
-        
         
 @app.route('/')
 def home():
@@ -29,7 +21,6 @@ def get_agents_list():
 
 @app.route('/start-game-connect4', methods=["POST"])
 def start_game_connect4():
-    init_session()
     data = request.get_json()
     
     try:
@@ -37,7 +28,7 @@ def start_game_connect4():
         player_2_type = data.get("player-2")
         p1 = AgentsList.all_agents[player_1_type]()
         p2 = AgentsList.all_agents[player_2_type]()
-        # global game_runner
+        global game_runner
         game_runner = AsyncGamerunner_Match4(p1, p2)
         game_runner.start()
         
@@ -47,10 +38,9 @@ def start_game_connect4():
             "player_1_type": player_1_type,
             "player_2_type": player_2_type
         }
-        game_id = session["connect4_next_game_id"]
-        session["connect4_next_game_id"] += 1
-        session["connect4_games"][game_id] = json.dump(game_data)
-        return jsonify({"message": "200 Connect 4 Game has started", "game-id": game_id})
+        game_runner.from_dict(game_data["game_runner"])
+        session["connect4_game"] = json.dumps(game_data)
+        return jsonify({"message": "200 Connect 4 Game has started"})
     
     except Exception as e:
         return jsonify({"message": "400 " + str(e)})
@@ -59,8 +49,10 @@ def start_game_connect4():
 @app.route("/get-state-connect4", methods=["GET"])
 def get_state_connect4():
     try:
-        
-        return jsonify(game_runner.to_dict())
+        game_data = json.loads(session["connect4_game"])
+        dict = game_data["game_runner"]
+        dict["message"] = "200 data was sent"
+        return jsonify(dict)
     except Exception as e:
         return jsonify({"message": "400 " + str(e)})
         
@@ -70,11 +62,20 @@ def apply_move():
     data = request.get_json()
     column = data.get('column')
     player_id = data.get('player-id')
+    is_bot = data.get('is-bot')
+    game_data = json.loads(session["connect4_game"])
+    p1 = AgentsList.all_agents[game_data["player_1_type"]]()
+    p2 = AgentsList.all_agents[game_data["player_2_type"]]()
+    game_runner = AsyncGamerunner_Match4(p1, p2)
+    game_runner.from_dict(game_data["game_runner"])
     try:
-        game_runner.apply_move(column, player_id)
+        game_runner.apply_move(column, player_id, is_bot)
     except Exception as e:
         return jsonify({"message": "400 " + str(e)})
     else:
+        # store game runner data in session variable
+        game_data["game_runner"] = game_runner.to_dict()
+        session["connect4_game"] = json.dumps(game_data)
         return jsonify({"message": "200 move applied"})
      
 if __name__ == '__main__':

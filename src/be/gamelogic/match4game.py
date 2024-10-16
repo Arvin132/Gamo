@@ -23,7 +23,11 @@ class Match4Command():
     def to_dict(self):
         return {"column": self.column,
                 "player_id" : self.player_id}
- 
+    def from_dict(given):
+        command = Match4Command()
+        command.column = given["column"]
+        command.player_id = given["player_id"]
+        return command
 
 class Match4Game:
     _state: Match4State
@@ -128,6 +132,13 @@ class Match4Game:
             "current_player": self._state.current_player,
             "winner_player": self._state.winner_player
         }
+    def from_dict(given):
+        game = Match4Game()
+        game._state.board = np.array(given["board"], dtype=int)
+        game._state.terminal = given["terminal"]
+        game._state.current_player = given["current_player"]
+        game._state.winner_player = given["winner_player"]
+        return game
     def to_json(self) -> str:
         return json.dumps(self.to_dict())
 
