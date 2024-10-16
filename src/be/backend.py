@@ -14,11 +14,11 @@ app.secret_key = 'supersecretkey'
 def home():
     return "Backend is running!"
 
-@app.route('/get-agents-list')
+@app.route('/connect4/agents')
 def get_agents_list():
     return jsonify({"agents": AgentsList.keys_tolist(), "humen-agent": AgentsList.humen_agent})
 
-@app.route('/apply-move', methods=['POST'])
+@app.route('/connect4/apply-move', methods=['POST'])
 def apply_move():
     data = request.get_json()
     column = data.get('column')
@@ -32,7 +32,7 @@ def apply_move():
         return jsonify({"message": "200 move applied"})
 
 
-@app.route('/start-game-connect4', methods=["POST"])
+@app.route('/connect4/start', methods=["POST"])
 def start_game_connect4():
     data = request.get_json()
     player_1_type = data.get("player-1")
@@ -48,7 +48,7 @@ def start_game_connect4():
     else:
         return jsonify({"message": "200 Connect 4 Game has started"})
 
-@app.route("/get-state-connect4", methods=["GET"])
+@app.route("/connect4/state", methods=["GET"])
 def get_state_connect4():
     try:
         state, move = game.get_state()
