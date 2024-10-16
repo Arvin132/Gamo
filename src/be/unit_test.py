@@ -57,16 +57,30 @@ class GamoFlaskTest_Backend(unittest.TestCase):
     def test_apply_move_connect(self):
         self.app.post('/start-game-connect4',\
                                     json={'player-1': "Humen", 'player-2': "Humen"})
-        response = self.app.post('/apply-move', json={"column": 1, "player-id": 1})
+        response = self.app.post('/apply-move', json={"column": 1, "player-id": 1, "is-bot": False})
         data_dict = json.loads(response.data.decode('utf-8'))
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data_dict["message"].startswith("200"))
         
         response = self.app.get('/get-state-connect4')
         data_dict = json.loads(response.data.decode('utf-8'))
+        print(data_dict)
         self.assertEqual(response.status_code, 200)
         self.assertTrue(data_dict["message"].startswith("200"))
         self.assertEqual(data_dict["state"]["board"][-1][0], 1.0)
+
+        self.app.post('/start-game-connect4',\
+                                    json={'player-1': "Random Agent", 'player-2': "Humen"})
+        response = self.app.post('/apply-move', json={"column": 1, "player-id": 1, "is-bot": True})
+        data_dict = json.loads(response.data.decode('utf-8'))
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data_dict["message"].startswith("200"))
+        
+        response = self.app.get('/get-state-connect4')
+        data_dict = json.loads(response.data.decode('utf-8'))
+        print(data_dict)
+        self.assertEqual(response.status_code, 200)
+        self.assertTrue(data_dict["message"].startswith("200"))
 
 if __name__ == '__main__':
     unittest.main()
