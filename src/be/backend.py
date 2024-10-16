@@ -16,7 +16,7 @@ def home():
 
 @app.route('/get-agents-list')
 def get_agents_list():
-    return jsonify({"agents": AgentsList.keys_tolist()})
+    return jsonify({"agents": AgentsList.keys_tolist(), "humen-agent": AgentsList.humen_agent})
 
 @app.route('/apply-move', methods=['POST'])
 def apply_move():
