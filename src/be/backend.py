@@ -33,8 +33,9 @@ def apply_move():
 
 @app.route('/start-game-connect4', methods=["POST"])
 def start_game_connect4():
-    player_1_type = request.args.get("player-1")
-    player_2_type = request.args.get("player-2")
+    data = request.get_json()
+    player_1_type = data.get("player-1")
+    player_2_type = data.get("player-2")
     try:
         p1 = AgentsList.all_agents[player_1_type]()
         p2 = AgentsList.all_agents[player_2_type]()
