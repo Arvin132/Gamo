@@ -7,9 +7,6 @@ import json
 
 app = Flask(__name__)
 CORS(app)
-
-game_runner: AsyncGamerunner_Match4 = None
-app.secret_key = 'supersecretkey'
         
 @app.route('/')
 def home():
@@ -37,7 +34,6 @@ def start_game_connect4():
             "player_1_type": player_1_type,
             "player_2_type": player_2_type
         }
-        game_runner.from_dict(game_data["game_runner"])
         session["connect4_game"] = json.dumps(game_data)
         return jsonify({"message": "200 Connect 4 Game has started"})
     
@@ -50,6 +46,7 @@ def get_state_connect4():
     try:
         game_data = json.loads(session["connect4_game"])
         dict = game_data["game_runner"]
+        dict["players"] = {"player-1": game_data["player_1_type"], "player-2": game_data["player_2_type"]}
         dict["message"] = "200 data was sent"
         return jsonify(dict)
     except Exception as e:
@@ -69,12 +66,12 @@ def apply_move():
     game_runner.from_dict(game_data["game_runner"])
     try:
         game_runner.apply_move(column, player_id, is_bot)
-    except Exception as e:
-        return jsonify({"message": "400 " + str(e)})
-    else:
         # store game runner data in session variable
         game_data["game_runner"] = game_runner.to_dict()
         session["connect4_game"] = json.dumps(game_data)
+    except Exception as e:
+        return jsonify({"message": "400 " + str(e)})
+    else:
         return jsonify({"message": "200 move applied"})
      
 if __name__ == '__main__':
