@@ -7,6 +7,8 @@ import json
 
 app = Flask(__name__)
 CORS(app)
+
+app.secret_key = "supersecretkey"
         
 @app.route('/')
 def home():
@@ -15,19 +17,6 @@ def home():
 @app.route('/connect4/agents')
 def get_agents_list():
     return jsonify({"agents": AgentsList.keys_tolist(), "humen-agent": AgentsList.humen_agent})
-
-@app.route('/connect4/apply-move', methods=['POST'])
-def apply_move():
-    data = request.get_json()
-    column = data.get('column')
-    player_id = data.get('player-id')
-    is_bot = data.get("is-bot")
-    try:
-        apply_move(column, player_id, is_bot)
-    except Exception as e:
-        return jsonify({"message": "400 " + str(e)})
-    else:
-        return jsonify({"message": "200 move applied"})
 
 
 @app.route('/connect4/start', methods=["POST"])
@@ -67,7 +56,7 @@ def get_state_connect4():
         return jsonify({"message": "400 " + str(e)})
         
 
-@app.route('/apply-move', methods=['POST']) 
+@app.route('/connect4/apply-move', methods=['POST']) 
 def apply_move():
     data = request.get_json()
     column = data.get('column')
