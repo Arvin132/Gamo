@@ -1,5 +1,6 @@
 from .agentsABC import Match4Agent
 from .match4game import Match4Game, Match4State, Match4Command
+from .minimaxAgent import MiniMaxAgent, zero_heurisitic
 from .randomAgent import RandomMatch4Agent
 from .humenAgent import HumenMatch4Agent
 from copy import deepcopy
@@ -43,16 +44,16 @@ class Gamerunner_Match4:
     """
         start a fresh new game and start the playing process
     """
-    def run(self, vebose=False):
+    def run(self, verbose=False):
         self.game.setup()
-        
-        if (vebose): self.print_state()
+        self.cur_player = self.p1
+        if (verbose): self.print_state()
         while True:
             command = self.cur_player.take_turn(self.game)
             self.game.apply_command(command)
             self.command_histo.append(deepcopy(command))
             self.cur_player = self.p2 if (self.cur_player is self.p1) else self.p1 
-            if (vebose): self.print_state()
+            if (verbose): self.print_state()
             if (self.game.is_terminal()):
                 print("Game Finished")
                 if (self.game._state.winner_player == self.game.tie_value):
@@ -60,6 +61,29 @@ class Gamerunner_Match4:
                 else:
                     print(f"Winner: Player {int(self.game._state.winner_player)}")
                 break
+            
+    def run_multiple_games(self, game_counts, verbose=False):
+        results = []
+        
+        for iter in range(game_counts):
+            self.game.setup()
+            self.cur_player = self.p1
+            while True:
+                command = self.cur_player.take_turn(self.game)
+                self.game.apply_command(command)
+                self.command_histo.append(deepcopy(command))
+                self.cur_player = self.p2 if (self.cur_player is self.p1) else self.p1 
+                if (verbose): self.print_state()
+                if (self.game.is_terminal()):
+                    print("Game Finished")
+                    if (self.game._state.winner_player == self.game.tie_value):
+                        print("Tie !!")
+                    else:
+                        print(f"Winner: Player {int(self.game._state.winner_player)}")
+                    break
+            results.append(int(self.game._state.winner_player))
+            
+        return results
     
     def print_state(self):
         state = self.game.get_state()
@@ -76,14 +100,6 @@ class Gamerunner_Match4:
             print("")
         print()
                      
-
-def main():
-    game_runner = Gamerunner_Match4(HumenMatch4Agent(), RandomMatch4Agent())
-    game_runner.run(vebose=True)
-
-
-if __name__ == "__main__":
-    main()
 
 
     

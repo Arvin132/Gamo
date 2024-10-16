@@ -49,9 +49,7 @@ class Match4Game:
     def get_state(self) -> Match4State:
         return deepcopy(self._state)
     
-    def apply_command(self, command: Match4Command) -> bool:
-
-        
+    def apply_command(self, command: Match4Command):
         # checks if the given command is a correct command
         if (not isinstance(command, Match4Command)):
             raise TypeError("Gamerunner_Match4 said: Expected a Match4Command from given Match4Agent")
@@ -65,18 +63,28 @@ class Match4Game:
         while(self._state.board[row][command.column] != 0):
             row -= 1
             if (row < 0):
-                return False
+                raise IndexError(f"Acess to invalid row; row = {row}")
         self._state.board[row][command.column] = command.player_id
         self._state.current_player = 1 if self._state.current_player == 2 else 2
         self.check_for_terminal()
         return True
     
-    def check_for_terminal(self) -> int:
-        return self.check_for_terminal_for_state(self._state)
+    def peak_command(command: Match4Command, state: Match4State) -> Match4State:
+        retVal = deepcopy(state)
+        row = retVal.board.shape[0] - 1
+        while(retVal.board[row][command.column] != 0):
+            row -= 1
+        retVal.board[row][command.column] = command.player_id
+        retVal.current_player = 2 if state.current_player == 1 else 1
+        Match4Game.check_for_terminal_for_state(retVal)
+        return retVal
     
-    def check_for_terminal_for_state(self, state: Match4State) -> int:
-        for i in range(self.num_cols):
-            for j in range(self.num_rows):
+    def check_for_terminal(self) -> int:
+        return Match4Game.check_for_terminal_for_state(self._state)
+    
+    def check_for_terminal_for_state(state: Match4State) -> int:
+        for i in range(Match4Game.num_cols):
+            for j in range(Match4Game.num_rows):
                 cur_pos = np.array([i, j])
                 winner = state.board[i][j]
                 if (winner == 0): continue
@@ -94,33 +102,25 @@ class Match4Game:
                             return winner
                         
         # if no winner check for a tie:
-        for i in range(self.num_cols):
+        for i in range(Match4Game.num_cols):
             if (state.board[0][i] == 0):
                 break
             if (i == 7):
                 state.terminal = True
-                state.winner_player = self.tie_value
-                return self.tie_value
+                state.winner_player = Match4Game.tie_value
+                return Match4Game.tie_value
         return 0
     
     def legal_move(self, command: Match4Command) -> bool:
+        return Match4Game.legal_move_state(command, self._state)
+        
+    def legal_move_state(command: Match4Command, state: Match4State) -> bool:
         try:
-            if(self._state.board[0][command.column] != 0):
+            if(state.board[0][command.column] != 0):
                 return False
             return True
         except:
             return False
-        
-    def peak_command(self, command: Match4Command, state: Match4State) -> Match4State:
-        row = state.board.shape[0] - 1
-        while(state.board[row][command.column] != 0):
-            row -= 1
-            if (row < 0):
-                return False
-        state.board[row][command.column] = command.player_id
-        self.check_for_terminal_for_state(state)
-        return deepcopy(state)
-        
     
     def is_terminal(self) -> bool:
         return self._state.terminal
