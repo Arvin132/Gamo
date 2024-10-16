@@ -39,9 +39,11 @@ class AsyncGamerunner_Match4:
         
     def get_state(self) -> tuple[Match4State, Match4Command]:
         if (len(self.command_histo) != 0):
-            return self.get_state(), self.command_histo[-1]
+            return self.game.get_state(), self.command_histo[-1]
         else:
-            return self.get_state(), Match4Command()
+            command = Match4Command()
+            command.column = -10; command.player_id= -10
+            return self.game.get_state(), command
         
     
     
