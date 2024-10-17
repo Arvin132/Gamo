@@ -1,8 +1,7 @@
-from .match4game import Match4Command, Match4Game, Match4State
-from .agentsABC import Match4Agent
+from .match4game import Match4Command, Match4Game, Match4State, Match4Agent
 from typing import Callable
 import random
-import heapq
+import numpy as np
 import math
 
 
@@ -59,33 +58,35 @@ class MiniMaxAgent(Match4Agent):
                 best_moves.append(move)
         return best_moves[random.randint(0, len(best_moves)-1)]
     
-    def apply_minimax(self, node: MinimaxNode, k=0):
+    def apply_minimax(self, node: MinimaxNode, k=0, alpha=-math.inf, beta=math.inf):
         if (k == self.max_depth or node.state.terminal):
             node.value = self.h_function(node.state, self.player_id)
         else:
             # first find all legal moves
-            legal_moves = []
-            for i in range(node.state.board.shape[0]):
-                command = Match4Command()
-                command.column = i
-                command.player_id = node.state.current_player
-                if (Match4Game.legal_move_state(command, node.state)):
-                    legal_moves.append(command)
+            legal_moves = [
+                move for i in range(node.state.board.shape[0])
+                if (move := Match4Command(column=i, player_id=node.state.current_player)) and
+                Match4Game.legal_move_state(move, node.state)
+            ]
+
             # create list of legal moves that can be created
-            children = []
-            for move in legal_moves:
-                res = Match4Game.peak_command(move, node.state)
-                children.append((MinimaxNode(res), move))
+            children = [(MinimaxNode(Match4Game.peak_command(move, node.state)), move) for move in legal_moves]
             node.successors = children
                 
             if (node.state.current_player == self.player_id):
                 node.value = -math.inf
                 for child in node.successors:
                     node.value = max(node.value, self.apply_minimax(child[0], k + 1))
+                    alpha = max(alpha, node.value)
+                    if beta <= alpha:
+                        break
             else:
                 node.value = math.inf
                 for child in node.successors:
                     node.value = min(node.value, self.apply_minimax(child[0], k + 1))
+                    beta = min(beta, node.value)
+                    if beta <= alpha:
+                        break
         return node.value
 
 """
@@ -95,8 +96,8 @@ class MiniMaxAgent(Match4Agent):
 """
 
 class ZeroH_MiniMax_Match4(MiniMaxAgent):
-    def __init__(self):
-        super().__init__(ZeroH_MiniMax_Match4.zero_heurisitic, 2)
+    def __init__(self, max_depth=2):
+        super().__init__(ZeroH_MiniMax_Match4.zero_heurisitic, max_depth)
         
     def zero_heurisitic(S: Match4State, max_player: int) -> float:
         if (S.terminal):
@@ -105,6 +106,43 @@ class ZeroH_MiniMax_Match4(MiniMaxAgent):
             else:
                 return -100.0
         return 0.0
+
+
+class ThreeCountH_MiniMax_Match4(MiniMaxAgent):
+    
+    def __init__(self, max_depth=2):
+        super().__init__(ThreeCountH_MiniMax_Match4.three_line_heuristic, max_depth)
+
+    def three_line_heuristic(S: Match4State, max_player: int) -> float:
+        if (S.terminal):
+            if (S.winner_player == max_player):
+                return 100.0
+            else:
+                return -100.0
+            
+        counted = 0
+        counted_oponent = 0
+
+        for i in range(Match4Game.num_cols):
+            for j in range(Match4Game.num_rows):
+                cur_pos = np.array([i, j])
+                winner = S.board[i][j]
+                if (winner == 0): continue
+                for mov in [[0, 1], [1, 0], [-1, -1], [-1, 1]]:
+                    mov = np.array(mov)
+                    for m in range(3):
+                        pos = cur_pos + mov * m
+                        if (not (0 <= pos[0] < S.board.shape[0]) or not (0 <= pos[1] < S.board.shape[1])): break
+                        # if (pos[0] >= S.board.shape[0] or pos[1] >= S.board.shape[1] or pos[0] < 0 or pos[1] < 0):
+                        #     break
+                        if (S.board[pos[0]][pos[1]] != winner):
+                            break
+                        if (m == 2):
+                            counted += 1 if (winner == max_player) else 0
+                            counted_oponent += 1 if (winner != max_player) else 0
+        
+        return 1.0 * counted - 1.0 * counted_oponent
+
 
 
 
