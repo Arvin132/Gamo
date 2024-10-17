@@ -14,7 +14,7 @@ def home():
 
 @app.route('/get-agents-list')
 def get_agents_list():
-    return jsonify({"agents": AgentsList.keys_tolist(), "humen-agent": AgentsList.humen_agent})
+    return jsonify({"agents": AgentsList.keys_tolist(), "humen-agent": AgentsList.human_agent})
 
 @app.route('/start-game-connect4', methods=["POST"])
 def start_game_connect4():

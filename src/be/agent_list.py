@@ -1,12 +1,13 @@
-from gamelogic import HumenMatch4Agent, RandomMatch4Agent, FirstMoveMatch4Agent
-from copy import deepcopy
+from gamelogic import HumenMatch4Agent, RandomMatch4Agent, FirstMoveMatch4Agent, ZeroH_MiniMax_Match4, ThreeCountH_MiniMax_Match4
 
 class AgentsList:
-    humen_agent = "Humen"
+    human_agent = "Human"
     all_agents = {
-        deepcopy(humen_agent): HumenMatch4Agent,
+        human_agent: HumenMatch4Agent,
         "Random Agent": RandomMatch4Agent,
-        "First Move Agent": FirstMoveMatch4Agent
+        "First move Agent": FirstMoveMatch4Agent, 
+        "Zero Heuristics MiniMax Agent": ZeroH_MiniMax_Match4,
+        "Three counte Heuristics MiniMax Agent": ZeroH_MiniMax_Match4,
     }
 
     
