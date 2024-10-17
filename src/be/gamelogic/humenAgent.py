@@ -1,5 +1,4 @@
-from .match4game import Match4Command, Match4Game, Match4State
-from .agentsABC import Match4Agent
+from .match4game import Match4Command, Match4Game, Match4State, Match4Agent
 
 
 """

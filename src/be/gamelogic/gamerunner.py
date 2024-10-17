@@ -1,6 +1,5 @@
-from .agentsABC import Match4Agent
-from .match4game import Match4Game, Match4State, Match4Command
-from .minimaxAgent import MiniMaxAgent, zero_heurisitic
+from .match4game import Match4Game, Match4State, Match4Command, Match4Agent
+from .minimaxAgent import MiniMaxAgent
 from .randomAgent import RandomMatch4Agent
 from .humenAgent import HumenMatch4Agent
 from copy import deepcopy
