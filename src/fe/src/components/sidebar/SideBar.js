@@ -5,31 +5,29 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import "./SideBar.css";
 
-const Sidebar = ({ player1, player2, handlePlayer1Change, handlePlayer2Change }) => {
+const Sidebar = ({ player1, player2, handlePlayer1Change, handlePlayer2Change, onStartGame }) => {
   const [agents, setAgents] = useState([]);
 
   useEffect(() => {
     axiosInstance.get("/connect4/agents")
-      .then((response) => {
-        setAgents(response.data.agents);
-      })
-      .catch((error) => {
-        console.error("Error fetching agents list:", error);
-      });
+      .then((response) => setAgents(response.data.agents))
+      .catch((error) => console.error("Error fetching agents list:", error));
   }, []);
 
   const getIcon = (player) => (player === "Humen" ? <Person /> : <SmartToyOutlined />);
+
   const handleStartGame = () => {
     axiosInstance.post("/connect4/start", {
-        "player-1": player1,
-        "player-2": player2,
-      })
+      "player-1": player1,
+      "player-2": player2,
+    })
       .then((response) => {
         alert(response.data.message);
+        onStartGame(player1, player2); // Pass the player types to the board on game start
       })
-      .catch((error) => {
-        alert("Error starting game: " + error.response.data.message);
-      });
+      .catch((error) =>
+        alert("Error starting game: " + error.response.data.message)
+      );
   };
 
   return (
