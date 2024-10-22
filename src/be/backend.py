@@ -2,15 +2,34 @@ from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 from gamelogic import AsyncGamerunner_Match4
 from agent_list import AgentsList
+from db import db, init_database, initilize_app
+import argparse
 import json
+
+# this section is only for argument parsing
+
+parser = argparse.ArgumentParser(description=" This is Gamo Backend getting ready to accept requests")
+
+parser.add_argument("--init-db", action="store_true", help="used when one wants to initilize the database, the first time running the backend")
+args = parser.parse_args()
+
 
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
+
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = "supersecretkey"
-   
+
+gamo_key = 8569
+initilize_app(app)
+if (args.init_db):
+    print("trying to create the database")
+    init_database(app)
+    
+    
+
 @app.route('/')
 def home():
     return "Backend is running!"
