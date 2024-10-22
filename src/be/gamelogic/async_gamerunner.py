@@ -1,4 +1,4 @@
-from .match4game import Match4Game, Match4State, Match4Command, Match4Agent
+from .match4game import Match4Game, Match4Command, Match4Agent
 from copy import deepcopy
 
 class AsyncGamerunner_Match4:

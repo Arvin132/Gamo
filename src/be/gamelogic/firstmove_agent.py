@@ -1,5 +1,4 @@
-from .match4game import Match4Command, Match4Game, Match4State, Match4Agent
-import random
+from .match4game import Match4Command, Match4Game, Match4Agent
 
 """
     FirstMoveMatch4Agent:
