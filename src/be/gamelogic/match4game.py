@@ -1,6 +1,9 @@
 from copy import deepcopy
 import numpy as np
 import json
+import abc
+
+
 
 
 
@@ -28,6 +31,10 @@ class Match4Command():
         command.column = given["column"]
         command.player_id = given["player_id"]
         return command
+    
+    def __init__(self, column=-10, player_id=10) -> None:
+        self.column = column
+        self.player_id = player_id
 
 class Match4Game:
     _state: Match4State
@@ -148,3 +155,34 @@ class Match4Game:
         self._state.terminal = state_dict['terminal']
         self._state.current_player = state_dict['current_player']
         self._state.winner_player = state_dict['winner_player']
+
+
+
+"""
+    Match4Agent:
+        abstract base class designed to create agents to play Match4Games.
+        at each turn the game will call the method take_turn() to determine the next move of the agent
+
+    How to create your own agent:
+
+        **mandatory** : override take_turn(game) method.
+            1- make sure that you return a Match4Command
+            2- make sure that you return a "legal" command. this can be checked using the game.legal_move(command) method
+            3- make sure that the command that you return has the same player_id equal to your agents
+        
+        optional: override the learn() method to pre-train a model if you wish to for the purpose of the Agent!
+            1- make sure that if you write a new Constructor for your class you call super().__init__()
+"""
+
+class Match4Agent(abc.ABC):
+    player_id: int
+    def __init__(self) -> None:
+        self.learn()
+        
+    @abc.abstractmethod
+    def take_turn(self, game: Match4Game)-> Match4Command:
+        None
+    
+    def learn(self):
+        None
+

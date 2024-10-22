@@ -1,8 +1,5 @@
-from .agentsABC import Match4Agent
-from .match4game import Match4Game, Match4State, Match4Command
-from .minimaxAgent import MiniMaxAgent
-from .randomAgent import RandomMatch4Agent
-from .humenAgent import HumenMatch4Agent
+from .match4game import Match4Game, Match4State, Match4Agent
+
 from copy import deepcopy
 
 
@@ -65,7 +62,7 @@ class Gamerunner_Match4:
     def run_multiple_games(self, game_counts, verbose=False):
         results = []
         
-        for iter in range(game_counts):
+        for _ in range(game_counts):
             self.game.setup()
             self.cur_player = self.p1
             while True:
@@ -75,11 +72,12 @@ class Gamerunner_Match4:
                 self.cur_player = self.p2 if (self.cur_player is self.p1) else self.p1 
                 if (verbose): self.print_state()
                 if (self.game.is_terminal()):
-                    print("Game Finished")
-                    if (self.game._state.winner_player == self.game.tie_value):
-                        print("Tie !!")
-                    else:
-                        print(f"Winner: Player {int(self.game._state.winner_player)}")
+                    if (verbose):
+                        print("Game Finished")
+                        if (self.game._state.winner_player == self.game.tie_value):
+                            print("Tie !!")
+                        else:
+                            print(f"Winner: Player {int(self.game._state.winner_player)}")
                     break
             results.append(int(self.game._state.winner_player))
             

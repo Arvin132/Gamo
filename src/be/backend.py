@@ -21,7 +21,7 @@ def connect4_home():
 
 @app.route('/connect4/agents')
 def get_agents_list():
-    return jsonify({"agents": AgentsList.keys_tolist(), "humen-agent": AgentsList.humen_agent})
+    return jsonify({"agents": AgentsList.keys_tolist(), "humen-agent": AgentsList.human_agent})
 
 
 @app.route('/connect4/start', methods=["POST"])
