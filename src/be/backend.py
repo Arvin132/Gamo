@@ -6,9 +6,10 @@ import json
 
 
 app = Flask(__name__)
-CORS(app)
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
-app.secret_key = "supersecretkey"
+app.config["SESSION_TYPE"] = "filesystem"
+app.config["SECRET_KEY"] = "supersecretkey"
         
 @app.route('/')
 def home():
