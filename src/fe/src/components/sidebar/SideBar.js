@@ -5,20 +5,22 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import "./SideBar.css";
 
-const Sidebar = ({ player1, player2, handlePlayer1Change, handlePlayer2Change }) => {
+const Sidebar = ({ player1, player2, handlePlayer1Change, handlePlayer2Change, setP1, setP2 }) => {
   const [agents, setAgents] = useState([]);
 
   useEffect(() => {
     axiosInstance.get("/connect4/agents")
       .then((response) => {
         setAgents(response.data.agents);
+        setP1(response.data.agents[0]);
+        setP2(response.data.agents[0]);
       })
       .catch((error) => {
         console.error("Error fetching agents list:", error);
       });
   }, []);
 
-  const getIcon = (player) => (player === "Humen" ? <Person /> : <SmartToyOutlined />);
+  const getIcon = (player) => (player === "Human" ? <Person /> : <SmartToyOutlined />);
   const handleStartGame = () => {
     axiosInstance.post("/connect4/start", {
         "player-1": player1,
