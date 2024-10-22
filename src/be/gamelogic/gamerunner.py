@@ -1,4 +1,5 @@
 from .match4game import Match4Game, Match4State, Match4Agent
+
 from copy import deepcopy
 
 

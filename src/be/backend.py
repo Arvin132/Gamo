@@ -6,17 +6,25 @@ import json
 
 
 app = Flask(__name__)
-CORS(app)
-        
+CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
+
+app.config["SESSION_TYPE"] = "filesystem"
+app.config["SECRET_KEY"] = "supersecretkey"
+   
 @app.route('/')
 def home():
     return "Backend is running!"
 
-@app.route('/get-agents-list')
+@app.route('/connect4')
+def connect4_home():
+    return "Connect4 is ready to be accessed"
+
+@app.route('/connect4/agents')
 def get_agents_list():
     return jsonify({"agents": AgentsList.keys_tolist(), "humen-agent": AgentsList.human_agent})
 
-@app.route('/start-game-connect4', methods=["POST"])
+
+@app.route('/connect4/start', methods=["POST"])
 def start_game_connect4():
     data = request.get_json()
     
@@ -41,7 +49,7 @@ def start_game_connect4():
         return jsonify({"message": "400 " + str(e)})
         
 
-@app.route("/get-state-connect4", methods=["GET"])
+@app.route("/connect4/state", methods=["GET"])
 def get_state_connect4():
     try:
         game_data = json.loads(session["connect4_game"])
@@ -53,7 +61,7 @@ def get_state_connect4():
         return jsonify({"message": "400 " + str(e)})
         
 
-@app.route('/apply-move', methods=['POST']) 
+@app.route('/connect4/apply-move', methods=['POST']) 
 def apply_move():
     data = request.get_json()
     column = data.get('column')

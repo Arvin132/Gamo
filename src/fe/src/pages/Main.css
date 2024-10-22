@@ -1,0 +1,24 @@
+.main-container {
+    display: flex;
+    height: 100vh;
+    background-color: #f0f0f5;
+  }
+  
+  
+  .content-container {
+    flex-grow: 0;
+    padding: 40px;
+    background-color: #304964;
+    color: white;
+    overflow-y: auto;
+    width: 650px;
+  }
+  
+  .content-container h1 {
+    margin-bottom: 20px;
+  }
+  
+  .content-container h2 {
+    margin-bottom: 40px;
+  }
+  

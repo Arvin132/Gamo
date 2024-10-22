@@ -6,6 +6,7 @@ const baseURL = `${protocol}://${backendURI}`;
 
 const axiosInstance = axios.create({
   baseURL: baseURL,
+  withCredentials: true
 });
 
 export default axiosInstance;
