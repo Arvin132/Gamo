@@ -10,10 +10,14 @@ CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_cred
 
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = "supersecretkey"
-        
+   
 @app.route('/')
 def home():
     return "Backend is running!"
+
+@app.route('/connect4')
+def connect4_home():
+    return "Connect4 is ready to be accessed"
 
 @app.route('/connect4/agents')
 def get_agents_list():
