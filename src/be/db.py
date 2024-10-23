@@ -1,6 +1,12 @@
 from flask_sqlalchemy import SQLAlchemy
+import os
+
 
 db = SQLAlchemy()
+
+
+def db_log(message: str):
+     print("Data Base Info: " + message)
 
 def initilize_app(app):
     app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///my_database.db'
@@ -21,14 +27,20 @@ def import_user_values():
     db.session.commit() 
     
 def init_database(app):
+    path_to_db = "instance/my_database.db"
+    path_to_db = os.path.abspath(path_to_db)
+    if (os.path.exists(path_to_db)):
+        os.remove(path_to_db)
+        db_log(f"removed the database at location {path_to_db}")
     with app.app_context():
         db.create_all()
         import_user_values()
+    
 class User(db.Model):
     __tablename__ = 'users'
     
     id = db.Column(db.Integer, primary_key=True)
-    username = db.Column(db.String(80), nullable=False)
+    username = db.Column(db.String(80), unique=True, nullable=False)
     
     # Relationship to Bots
     bots = db.relationship('Bot', backref='user', lazy=True)
