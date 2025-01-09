@@ -2,15 +2,34 @@ from flask import Flask, jsonify, request, session
 from flask_cors import CORS
 from gamelogic import AsyncGamerunner_Match4
 from agent_list import AgentsList
+from db import init_database, initilize_app, User, db
+import argparse
 import json
+
+# this section is only for argument parsing
+
+parser = argparse.ArgumentParser(description=" This is Gamo Backend getting ready to accept requests")
+
+parser.add_argument("--init-db", action="store_true", help="used when one wants to initilize the database, the first time running the backend")
+args = parser.parse_args()
+
 
 
 app = Flask(__name__)
 CORS(app, resources={r"/*": {"origins": "http://localhost:3000"}}, supports_credentials=True)
 
+
 app.config["SESSION_TYPE"] = "filesystem"
 app.config["SECRET_KEY"] = "supersecretkey"
-   
+
+gamo_key = 8569
+initilize_app(app)
+if (args.init_db):
+    print("trying to create the database")
+    init_database(app)
+    
+    
+
 @app.route('/')
 def home():
     return "Backend is running!"
@@ -58,8 +77,7 @@ def get_state_connect4():
         dict["message"] = "200 data was sent"
         return jsonify(dict)
     except Exception as e:
-        return jsonify({"message": "400 " + str(e)})
-        
+        return jsonify({"message": "400 " + str(e)})       
 
 @app.route('/connect4/apply-move', methods=['POST']) 
 def apply_move():
@@ -81,7 +99,26 @@ def apply_move():
         return jsonify({"message": "400 " + str(e)})
     else:
         return jsonify({"message": "200 move applied"})
-     
+    
+@app.route('/user/get-few', methods=['GET'])
+def get_few_users():
+    users = User.query.limit(5).all()
+    users_reponse ={ "users": [{"id": user.id, "username": user.username} for user in users] }
+    return jsonify(users_reponse)
+
+@app.route('/user/get', methods=['GET'])
+def get_user():
+    user_id = request.get_json().get('id')
+    target = db.session.get(User, user_id)
+    if (target is None):
+        return jsonify({"message" : "no user with the given id: " + user_id}), 404
+    return jsonify({"id" : target.id, "username": target.username})
+
+@app.route('/user/add', methods=["POST"])
+def add_user():
+    raise NotImplementedError()
+
+
 if __name__ == '__main__':
     app.run(port=5000, debug=True)
 
