@@ -4,8 +4,8 @@ import Connect4Board from "../components/Connect4Board/Connect4Board";
 import "./Main.css";
 
 const Main = () => {
-  const [player1, setPlayer1] = useState("Humen");
-  const [player2, setPlayer2] = useState("Humen");
+  const [player1, setPlayer1] = useState("Human");
+  const [player2, setPlayer2] = useState("Human");
 
   const handlePlayer1Change = (event) => setPlayer1(event.target.value);
   const handlePlayer2Change = (event) => setPlayer2(event.target.value);

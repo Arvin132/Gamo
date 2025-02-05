@@ -10,12 +10,12 @@ function Connect4Board({ player1Type, player2Type }) {
   const [board, setBoard] = useState(Array(ROWS).fill(Array(COLS).fill(EMPTY)));
   const [currentPlayer, setCurrentPlayer] = useState(1); // 1 = 🔴, 2 = 🟡
   const [terminal, setTerminal] = useState(false); // Track if the game has ended
-  const [Humen, setHuman] = useState('');
+  const [Human, setHuman] = useState('');
 
   useEffect(() => {
     axiosInstance.get("/connect4/agents")
       .then((response) => {
-        setHuman(response.data["humen-agent"]);
+        setHuman(response.data["human-agent"]);
       })
       .catch((error) => {
         console.error("Error fetching agents list:", error);
@@ -34,6 +34,7 @@ function Connect4Board({ player1Type, player2Type }) {
   const fetchBoardState = () => {
     axiosInstance.get(`/connect4/state`)
       .then((response) => {
+        console.log(response.data)
         const newBoard = response.data.state.board.map((row) =>
           row.map((cell) => (cell === 1 ? "🔴" : cell === 2 ? "🟡" : EMPTY))
         );
@@ -47,7 +48,7 @@ function Connect4Board({ player1Type, player2Type }) {
   const handleColumnClick = (col) => {
     const currentPlayerType = currentPlayer === 1 ? player1Type : player2Type;
 
-    if (currentPlayerType === Humen) {
+    if (currentPlayerType === Human) {
       applyMove(col + 1);
     }
     else {
@@ -66,7 +67,7 @@ function Connect4Board({ player1Type, player2Type }) {
       .then(() => {
         fetchBoardState();
         const nextPlayerType = currentPlayer === 1 ? player2Type : player1Type;
-        if (nextPlayerType !== Humen) {
+        if (nextPlayerType !== Human) {
           setTimeout(() => handleAgentMove(), 1000);
         }
       })
@@ -85,7 +86,7 @@ function Connect4Board({ player1Type, player2Type }) {
         fetchBoardState(); // Update board state after bot move
 
         const nextPlayerType = currentPlayer === 1 ? player2Type : player1Type;
-        if (nextPlayerType !== Humen) {
+        if (nextPlayerType !== Human) {
           setTimeout(() => handleAgentMove(), 1000); // Continue bot moves if needed
         }
       })
