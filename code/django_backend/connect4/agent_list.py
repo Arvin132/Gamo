@@ -1,9 +1,9 @@
-from gamelogic import HumenMatch4Agent, RandomMatch4Agent, FirstMoveMatch4Agent, ZeroH_MiniMax_Match4, ThreeCountH_MiniMax_Match4
+from .gamelogic import HumanMatch4Agent, RandomMatch4Agent, FirstMoveMatch4Agent, ZeroH_MiniMax_Match4, ThreeCountH_MiniMax_Match4
 
 class AgentsList:
     human_agent = "Human"
     all_agents = {
-        human_agent: HumenMatch4Agent,
+        human_agent: HumanMatch4Agent,
         "Random Agent": RandomMatch4Agent,
         "First move Agent": FirstMoveMatch4Agent, 
         "Zero Heuristics MiniMax Agent": ZeroH_MiniMax_Match4,

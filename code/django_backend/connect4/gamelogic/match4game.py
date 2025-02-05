@@ -93,7 +93,7 @@ class Match4Game:
         for i in range(Match4Game.num_cols):
             for j in range(Match4Game.num_rows):
                 cur_pos = np.array([i, j])
-                winner = state.board[i][j]
+                winner = int(state.board[i][j])
                 if (winner == 0): continue
                 for mov in [[0, 1], [1, 0], [-1, -1], [-1, 1]]:
                     mov = np.array(mov)
@@ -104,7 +104,7 @@ class Match4Game:
                         if (state.board[pos[0]][pos[1]] != winner):
                             break
                         if (m == 3):
-                            state.winner_player = winner
+                            state.winner_player = int(winner)
                             state.terminal = True
                             return winner
                         
