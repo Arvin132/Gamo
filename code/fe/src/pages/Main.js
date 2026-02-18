@@ -1,11 +1,13 @@
 import React, { useState } from "react";
 import Sidebar from "../components/sidebar/SideBar";
 import Connect4Board from "../components/Connect4Board/Connect4Board";
+import { AsyncGamerunnerMatch4 } from "../game_logic/connect4/asyncgamerunner";
 import "./Main.css";
 
 const Main = () => {
   const [player1, setPlayer1] = useState("Human");
   const [player2, setPlayer2] = useState("Human");
+  const [Match4, setMatch4] = useState(new AsyncGamerunnerMatch4())
 
   const handlePlayer1Change = (event) => setPlayer1(event.target.value);
   const handlePlayer2Change = (event) => setPlayer2(event.target.value);
@@ -17,12 +19,13 @@ const Main = () => {
         player2={player2}
         handlePlayer1Change={handlePlayer1Change}
         handlePlayer2Change={handlePlayer2Change}
+        Match4Handle={Match4}
       />
 
       <div className="content-container">
         <h1>Connect 4 Game</h1>
         <h2>Player 1: {player1} | Player 2: {player2}</h2>
-        <Connect4Board player1Type={player1} player2Type={player2} />
+        <Connect4Board player1Type={player1} player2Type={player2} Match4={Match4} />
       </div>
     </div>
   );

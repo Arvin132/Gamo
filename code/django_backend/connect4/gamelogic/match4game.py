@@ -19,7 +19,7 @@ class Match4State:
 
 
 
-class Match4Command():
+class Match4Command:
     column: int
     player_id: int
     
@@ -146,6 +146,7 @@ class Match4Game:
         game._state.current_player = given["current_player"]
         game._state.winner_player = given["winner_player"]
         return game
+    
     def to_json(self) -> str:
         return json.dumps(self.to_dict())
 

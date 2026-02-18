@@ -38,7 +38,8 @@ class AsyncGamerunner_Match4:
     def to_dict(self):
         return {
             "state" : self.game.to_dict(),
-            "moves": [move.to_dict() for move in self.command_histo] 
+            "moves": [move.to_dict() for move in self.command_histo],
+            "curplayer": self.cur_player.player_id
         }
     
     def from_dict(self, given: dict):

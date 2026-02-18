@@ -5,11 +5,10 @@ import Button from "@mui/material/Button";
 import Stack from "@mui/material/Stack";
 import "./SideBar.css";
 
-const Sidebar = ({ player1, player2, handlePlayer1Change, handlePlayer2Change }) => {
+const Sidebar = ({ player1, player2, handlePlayer1Change, handlePlayer2Change, Match4Handle }) => {
   const [agents, setAgents] = useState([]);
 
   useEffect(() => {
-    console.log("Requesting:", axiosInstance.defaults.baseURL + "/your-endpoint");
     axiosInstance.get("/connect4/agents")
       .then((response) => {
         setAgents(response.data.agents);
@@ -21,16 +20,17 @@ const Sidebar = ({ player1, player2, handlePlayer1Change, handlePlayer2Change })
 
   const getIcon = (player) => (player === "Human" ? <Person /> : <SmartToyOutlined />);
   const handleStartGame = () => {
-    axiosInstance.post("/connect4/start", {
-        "player-1": player1,
-        "player-2": player2,
-      })
-      .then((response) => {
-        alert(response.data.message);
-      })
-      .catch((error) => {
-        alert("Error starting game: " + error.response.data.message);
-      });
+    // axiosInstance.post("/connect4/start", {
+    //     "player-1": player1,
+    //     "player-2": player2,
+    //   })
+    //   .then((response) => {
+    //     alert(response.data.message);
+    //   })
+    //   .catch((error) => {
+    //     alert("Error starting game: " + error.response.data.message);
+    //   });
+    Match4Handle.start()
   };
 
   return (

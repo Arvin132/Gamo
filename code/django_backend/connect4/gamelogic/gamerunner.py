@@ -5,10 +5,6 @@ from copy import deepcopy
 
 
 """
-            this file includes a main file for running and testing the game runner class
-
-
-
     Gamerunner_Match4: class designed to run match 4 game given 2 different Agents.
     NOTE: the purpose of this file is to only demonstrate how a game would be run, and not used by the backend API 
 
@@ -21,6 +17,8 @@ from copy import deepcopy
     - use Gamerunner_Match4.p1 and .p2 to change the agent after the crea
 
 """
+
+
 class Gamerunner_Match4:
     game: Match4Game
     p1: Match4Agent
